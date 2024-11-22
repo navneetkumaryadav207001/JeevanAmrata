@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!-- Coding by CodingNepal | www.codingnepalweb.com-->
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title> Login and Registration Form in HTML & CSS | CodingLab </title>
+    <link href="{{ url_for('static', filename='css/sinup_login.css') }}" rel="stylesheet">
+    <!-- Fontawesome CDN Link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="container-fluid px-5 d-none d-lg-block">
+        <div class="row gx-5 py-3 align-items-center">
+            <div class="col-lg-3">
+                <div class="d-flex align-items-center justify-content-start">
+                    <!-- <i class="bi bi-phone-vibrate fs-1 text-primary me-2"></i>
+                    <h2 class="mb-0">+012 345 6789</h2> -->
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="d-flex align-items-center justify-content-center">
+                    <a href="{{url_for('index')}}" class="navbar-brand ms-lg-5">
+                        <h1 class="m-0 display-4 text-primary"><span class="text-secondary">Jīvan</span>amṛta</h1>
+                    </a>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="container">
+            <input type="checkbox" id="flip">
+            <div class="cover">
+                <div class="front">
+                    <img src="{{ url_for('static', filename='img/fruit.png') }}" alt="">
+                    <div class="text">
+                        <span class="text-1">Every new friend is a <br> new adventure</span>
+                        <span class="text-2">Let's get connected</span>
+                    </div>
+                </div>
+                <div class="back">
+                    <img class="backImg" src="{{ url_for('static', filename='img/fruit.png') }}" alt="">
+                    <div class="text">
+                        <span class="text-1">Complete miles of journey <br> with one step</span>
+                        <span class="text-2">Let's get started</span>
+                    </div>
+                </div>
+            </div>
+            <div class="forms">
+                <div class="form-content">
+                    <div class="login-form">
+                        <div class="title">Login</div>
+                        <form action="{{url_for('login_post')}}" method="post" id="loginForm">
+                            <div class="input-boxes">
+                                <div class="input-box">
+                                    <i class="fas fa-envelope"></i>
+                                    <input type="text" placeholder="Enter your email" required name="username">
+                                </div>
+                                <div class="input-box">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" placeholder="Enter your password" required name="password">
+                                </div>
+                                <div class="text"><a href="#">Forgot password?</a></div>
+                                <div class="button input-box">
+                                    <input type="submit" value="Submit">
+                                </div>
+                                <div class="text sign-up-text">Don't have an account? <label for="flip">Sigup
+                                        now</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="signup-form">
+                        <div class="title">Signup</div>
+                        <form action="{{url_for('register_post')}}" id="signUpForm" method="post">
+                            <div class="input-boxes">
+                                <div class="input-box">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" placeholder="Enter your name" required name="name">
+                                </div>
+                                <div class="input-box">
+                                    <i class="fas fa-envelope"></i>
+                                    <input type="text" placeholder="Enter your email" required name="username-2">
+                                </div>
+                                <div class="input-box">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" placeholder="Enter your password" required name="password-2">
+                                </div>
+                                <fieldset>
+                                    <legend>Signup as:</legend>
+                                  
+                                    <div>
+                                      <input type="radio" id="huey" name="type" value="Farmer" checked />
+                                      <label for="Farmer">Farmer</label>
+                                  
+
+                                      <input type="radio" id="dewey" name="type" value="Bussiness" />
+                                      <label for="Bussiness">Bussiness</label>
+                                  
+                                      <input type="radio" id="louie" name="type" value="Visitor" />
+                                      <label for="Visitor">Visitor</label>
+                                    </div>
+                                  </fieldset>
+                                <div class="button input-box">
+                                    <input type="submit" value="Submit">
+                                </div>
+                                <div class="text sign-up-text">Already have an account? <label for="flip">Login
+                                        now</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='img/carousel-1.jpg') }}"></script>
+</body>
+
+</html>
