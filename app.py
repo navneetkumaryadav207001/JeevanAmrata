@@ -2,7 +2,6 @@ import sqlite3,os,dotenv
 from flask import Flask, render_template, redirect, url_for, session, request, jsonify
 from flask_session import Session
 from flask_bcrypt import Bcrypt
-from authlib.integrations.flask_client import OAuth
 
 
 dotenv.load_dotenv()
