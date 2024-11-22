@@ -12,7 +12,6 @@ app.config['SESSION_FILE_DIR'] = './flask_session/'  # Directory to store sessio
 app.config['SESSION_PERMANENT'] = False
 Session(app)
 bcrypt = Bcrypt(app)
-oauth = OAuth(app)
 
 import google.generativeai as genai
 
@@ -23,16 +22,6 @@ app.config['GOOGLE_CLIENT_SECRET'] =  os.getenv('google_client_secret')  # Repla
 gem_api = os.getenv('gem_api')
 genai.configure(api_key=gem_api)
 
-
-
-google = oauth.register(
-    name='google',
-    client_id=app.config['GOOGLE_CLIENT_ID'],
-    client_secret=app.config['GOOGLE_CLIENT_SECRET'],
-    redirect_uri='http://localhost:5000/login/callback',
-    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
-    client_kwargs={'scope': 'openid profile email'},
-)
 
 def init_db():
     with sqlite3.connect('users.db') as conn:
@@ -127,33 +116,6 @@ def register_post():
     except sqlite3.IntegrityError:
         return redirect(url_for('index'))
 
-@app.route('/login/google')
-def login_google():
-    redirect_uri = url_for('google_authorized', _external=True)
-    return google.authorize_redirect(redirect_uri)
-
-@app.route('/login/callback')
-def google_authorized():
-    token = google.authorize_access_token()
-    user_info = token['userinfo']
-    email = user_info['email']
-
-    with sqlite3.connect('users.db') as conn:
-        cursor = conn.cursor()
-        cursor.execute('SELECT username FROM users WHERE username = ?', (email,))
-        user = cursor.fetchone()
-
-        if user:
-            session['username'] = email
-            return redirect(url_for('dashboard'))
-
-        # Register new user
-        cursor.execute('INSERT INTO users (username) VALUES (?)', (email,))
-        conn.commit()
-        session['username'] = email
-        return redirect(url_for('dashboard'))
-
-    return redirect(url_for('index'))
 
 
 @app.route('/logout')
