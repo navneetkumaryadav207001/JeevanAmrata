@@ -132,7 +132,3 @@ def chat():
     response = str(response.candidates[0].content.parts[0].text)
     print(response)
     return jsonify({'message': response})
-
-
-
-app.run()
