@@ -23,6 +23,8 @@ gem_api = os.getenv('gem_api')
 genai.configure(api_key=gem_api)
 
 
+
+
 def init_db():
     with sqlite3.connect('users.db') as conn:
         cursor = conn.cursor()
@@ -30,7 +32,9 @@ def init_db():
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT UNIQUE NOT NULL,
-                password TEXT
+                password TEXT NOT NULL,
+                name TEXT NOT NULL,
+                type TEXT NOT NULL
             )
         ''')
         conn.commit()
@@ -42,15 +46,43 @@ model = genai.GenerativeModel(
   model_name="gemini-1.5-flash",
   # safety_settings = Adjust safety settings
   # See https://ai.google.dev/gemini-api/docs/safety-settings
-  system_instruction="you are an chatbot helper for an organic farming website if relevant question is asked reply accordingly else ask to ask a relevent questions reply in hindi",
+  system_instruction="""you are an chatbot helper for an organic
+    farming website we connect organic farmer to the buyers and we
+      also promote farm tourism in india if relevant question
+      is asked reply accordingly else ask to ask a relevent questions reply in hindi""",
 )
 
 @app.route('/')
 def index():
     return render_template('sinup_login.html')
+@app.route('/home')
+def home():
+    model.system_instruction=""" your name is dall-e tell them if they ask for it if a question is asked regarding a website assume its our website 
+    you are an chatbot helper for an organic farming website we connect 
+    organic farmer to the buyers and we also promote farm tourism in india 
+    if relevant question is asked reply accordingly else ask to ask a relevent
+      questions reply in hindi user is on the homepage of the website it contains 
+    this is the content of the page guide the user with the help of this
+    
+    website contains 6 links in the header 
+    Home for the home
+About for the about section of the website
+Service for searching for the service we are providing
+Product for searching for the organic products
+Blogs for blogs uploaded by tourists
+Tour for searching or creating the tour
+Contact for contacting the site owner
+
+    """
+    if "username" not in session:
+        return redirect(url_for("index"))
+    return render_template('index.html')
 @app.route('/about')
 def about():
     return render_template('about.html')
+@app.route('/tour')
+def tour():
+    return render_template('tour.html')
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
@@ -77,20 +109,13 @@ def blog():
     return render_template('testinomial.html')
 
 
-@app.route('/login')
-def login():
-    if 'username' in session:
-        return redirect(url_for('dashboard'))
-    return render_template('login.html')
 
-@app.route('/register')
-def register():
-    return render_template('register.html')
 
 @app.route('/login_post', methods=['POST'])
 def login_post():
     username = request.form.get('username')
     password = request.form.get('password')
+    session['username'] = username
 
     with sqlite3.connect('users.db') as conn:
         cursor = conn.cursor()
@@ -99,23 +124,29 @@ def login_post():
 
     if user and bcrypt.check_password_hash(user[0], password):
         session['username'] = username
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('home'))
     return redirect(url_for('index'))
+
 @app.route('/register_post', methods=['POST'])
 def register_post():
-    username = request.form.get('username')
-    password = request.form.get('password')
+    username = request.form.get('username-2')
+    password = request.form.get('password-2')
+    name = request.form.get('name')
+    type = request.form.get('type')
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    
 
     try:
         with sqlite3.connect('users.db') as conn:
             cursor = conn.cursor()
-            cursor.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, hashed_password))
+            cursor.execute('INSERT INTO users (username, password, name , type) VALUES (?, ?,?,?)', (username, hashed_password,name ,type))
             conn.commit()
-        return redirect(url_for('index'))
+            print("yes")
+            return redirect(url_for('home'))
+        
     except sqlite3.IntegrityError:
         return redirect(url_for('index'))
-
 
 
 @app.route('/logout')
